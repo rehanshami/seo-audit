@@ -2,9 +2,12 @@ import express from "express";
 import { auditPage } from "./services/auditService.js";
 import auditRoute from "./routes/auditRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { requestLogger } from "./middleware/requestLogger.js";
 
 const app = express();
 app.use(express.json());
+
+app.use(requestLogger);
 
 app.use("/api/audit", auditRoute);
 
