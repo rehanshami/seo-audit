@@ -1,8 +1,12 @@
 import express from "express";
 import { auditPage } from "./services/auditService.js";
+import auditRoute from "./routes/auditRoutes.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 app.use(express.json());
+
+app.use("/api/audit", auditRoute);
 
 app.get("/health", (req, res) => {
   res.json({
@@ -18,12 +22,14 @@ app.get("/audit", (req, res) => {
 
 app.get("/test-audit", async (req, res) => {
   try {
-    const result = await auditPage("https://www.spark.co.nz");
+    const result = await auditPage("https://sparkhealth.nz");
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: "Failed to audit page" });
   }
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
