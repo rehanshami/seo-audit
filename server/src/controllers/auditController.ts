@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { auditPage } from "../services/auditService.js";
+import { logger } from "../utils/logger.js";
 
 export async function auditWebsiteController(
   req: Request,
@@ -9,11 +10,18 @@ export async function auditWebsiteController(
   try {
     const { url } = req.body;
 
+    logger.info({ url }, "Received audit request");
+
+    const result = await auditPage(url);
+
+    logger.info({ url }, "Audit completed");
+
     return res.json({
       success: true,
-      message: `Audit started for ${url}`,
+      data: result,
     });
   } catch (error) {
+    logger.error({ error }, "Audit failed");
     next(error);
   }
 

@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 import { msSince } from "../utils/timer.js";
-
+import { logger } from "../utils/logger.js";
 export interface AuditResult {
   url: string;
   statusCode: number | null;
@@ -12,7 +12,7 @@ export interface AuditResult {
 
 export async function auditPage(url: string): Promise<AuditResult> {
   const start = process.hrtime();
-
+  logger.debug({ url }, "Launching browser for audit");
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
@@ -34,7 +34,7 @@ export async function auditPage(url: string): Promise<AuditResult> {
     );
 
     await browser.close();
-
+    logger.info({ url, statusCode, responseTime }, "Audit finished");
     return {
       url,
       statusCode,
