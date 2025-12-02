@@ -5,9 +5,44 @@ export interface AuditResult {
   url: string;
   statusCode: number | null;
   responseTime: number;
+
   metaTitle: string | null;
+  metaTitleLength: number | null;
+
   metaDescription: string | null;
-  h1: string[];
+  metaDescriptionLength: number | null;
+
+  headings: {
+    h1: string[];
+    h2: number;
+    h3: number;
+    h4: number;
+    h5: number;
+    h6: number;
+  };
+
+  brokenLinks: {
+    url: string;
+    status: number | null;
+  }[];
+
+  missingAlt: {
+    src: string;
+  }[];
+
+  metaTags: {
+    canonical: string | null;
+    robots: string | null;
+    ogTitle: string | null;
+    ogDescription: string | null;
+    twitterTitle: string | null;
+    twitterDescription: string | null;
+  };
+
+  performance: {
+    domContentLoaded: number | null;
+    loadEvent: number | null;
+  };
 }
 
 export async function auditPage(url: string): Promise<AuditResult> {
